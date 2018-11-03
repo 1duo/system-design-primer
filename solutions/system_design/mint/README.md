@@ -98,7 +98,7 @@ We could store info on the 10 million users in a [relational database](https://g
 
 The `accounts` table could have the following structure:
 
-```
+```sql
 id int NOT NULL AUTO_INCREMENT
 created_at datetime NOT NULL
 last_update datetime NOT NULL
@@ -114,7 +114,7 @@ We'll create an [index](https://github.com/donnemartin/system-design-primer#use-
 
 We'll use a public [**REST API**](https://github.com/donnemartin/system-design-primer#representational-state-transfer-rest):
 
-```
+```sh
 $ curl -X POST --data '{ "user_id": "foo", "account_url": "bar", \
     "account_login": "baz", "account_password": "qux" }' \
     https://mint.com/api/v1/account
@@ -150,7 +150,7 @@ Data flow:
 
 The `transactions` table could have the following structure:
 
-```
+```sql
 id int NOT NULL AUTO_INCREMENT
 created_at datetime NOT NULL
 seller varchar(32) NOT NULL
@@ -164,7 +164,7 @@ We'll create an [index](https://github.com/donnemartin/system-design-primer#use-
 
 The `monthly_spending` table could have the following structure:
 
-```
+```sql
 id int NOT NULL AUTO_INCREMENT
 month_year date NOT NULL
 category varchar(32)
@@ -182,7 +182,7 @@ For the **Category Service**, we can seed a seller-to-category dictionary with t
 
 **Clarify with your interviewer how much code you are expected to write**.
 
-```
+```python
 class DefaultCategories(Enum):
 
     HOUSING = 0
@@ -199,7 +199,7 @@ seller_category_map['Target'] = DefaultCategories.SHOPPING
 
 For sellers not initially seeded in the map, we could use a crowdsourcing effort by evaluating the manual category overrides our users provide.  We could use a heap to quickly lookup the top manual override per seller in O(1) time.
 
-```
+```python
 class Categorizer(object):
 
     def __init__(self, seller_category_map, self.seller_category_crowd_overrides_map):
@@ -219,7 +219,7 @@ class Categorizer(object):
 
 Transaction implementation:
 
-```
+```python
 class Transaction(object):
 
     def __init__(self, created_at, seller, amount):
@@ -232,7 +232,7 @@ class Transaction(object):
 
 To start, we could use a generic budget template that allocates category amounts based on income tiers.  Using this approach, we would not have to store the 100 million budget items identified in the constraints, only those that the user overrides.  If a user overrides a budget category, which we could store the override in the `TABLE budget_overrides`.
 
-```
+```python
 class Budget(object):
 
     def __init__(self, income):
@@ -267,13 +267,13 @@ We could call the **Budget Service** to re-run the analysis if the user updates 
 
 Sample log file format, tab delimited:
 
-```
+```sql
 user_id   timestamp   seller  amount
 ```
 
 **MapReduce** implementation:
 
-```
+```python
 class SpendingByCategory(MRJob):
 
     def __init__(self, categorizer):

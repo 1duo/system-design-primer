@@ -84,7 +84,7 @@ We could store the raw **Sales API** server log files on a managed **Object Stor
 
 We'll assume this is a sample log entry, tab delimited:
 
-```
+```sql
 timestamp   product_id  category_id    qty     total_price   seller_id    buyer_id
 t1          product1    category1      2       20.00         1            1
 t2          product1    category2      2       20.00         2            2
@@ -102,7 +102,7 @@ We'll use a multi-step **MapReduce**:
 * **Step 1** - Transform the data to `(category, product_id), sum(quantity)`
 * **Step 2** - Perform a distributed sort
 
-```
+```python
 class SalesRanker(MRJob):
 
     def within_past_week(self, timestamp):
@@ -176,7 +176,7 @@ class SalesRanker(MRJob):
 
 The result would be the following sorted list, which we could insert into the `sales_rank` table:
 
-```
+```sql
 (category1, 1), product4
 (category1, 2), product1
 (category1, 3), product2
@@ -186,7 +186,7 @@ The result would be the following sorted list, which we could insert into the `s
 
 The `sales_rank` table could have the following structure:
 
-```
+```sql
 id int NOT NULL AUTO_INCREMENT
 category_id int NOT NULL
 total_sold int NOT NULL
@@ -206,13 +206,13 @@ We'll create an [index](https://github.com/donnemartin/system-design-primer#use-
 
 We'll use a public [**REST API**](https://github.com/donnemartin/system-design-primer#representational-state-transfer-rest):
 
-```
+```sh
 $ curl https://amazon.com/api/v1/popular?category_id=1234
 ```
 
 Response:
 
-```
+```json
 {
     "id": "100",
     "category_id": "1234",

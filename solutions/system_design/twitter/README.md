@@ -132,7 +132,7 @@ The new tweet would be placed in the **Memory Cache**, which populates user's ho
 
 We'll use a public [**REST API**](https://github.com/donnemartin/system-design-primer#representational-state-transfer-rest):
 
-```
+```sh
 $ curl -X POST --data '{ "user_id": "123", "auth_token": "ABC123", \
     "status": "hello world!", "media_ids": "ABC987" }' \
     https://twitter.com/api/v1/tweet
@@ -140,7 +140,7 @@ $ curl -X POST --data '{ "user_id": "123", "auth_token": "ABC123", \
 
 Response:
 
-```
+```json
 {
     "created_at": "Wed Sep 05 00:37:15 +0000 2012",
     "status": "hello world!",
@@ -163,13 +163,13 @@ For internal communications, we could use [Remote Procedure Calls](https://githu
 
 REST API:
 
-```
+```sh
 $ curl https://twitter.com/api/v1/home_timeline?user_id=123
 ```
 
 Response:
 
-```
+```json
 {
     "user_id": "456",
     "tweet_id": "123",
